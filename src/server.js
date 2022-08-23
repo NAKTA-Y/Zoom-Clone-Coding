@@ -22,3 +22,17 @@ const httpServer = http.createServer(app);
 const ioServer = new Server(httpServer);
 
 httpServer.listen(3000, handleListen);
+
+ioServer.on("connection", socket => {
+    socket.on("join_room", roomName => {
+        socket.join(roomName);
+    });
+
+    socket.on("offer", (offer, roomName) => {
+        socket.to(roomName).emit("offer", offer);
+    });
+
+    socket.on("answer", (answer, roomName) => {
+        socket.to(roomName).emit("answer", answer);
+    });
+})
